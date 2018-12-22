@@ -10,9 +10,11 @@ services:
     volumes:
       - ./api/:/var/www/html/
     links:
-      - mysql
+      - mysql 
     container_name: php
     restart: always
+  composer:
+    image: composer
   apache:
     build:
       context: './apache/'
