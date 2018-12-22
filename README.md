@@ -1,0 +1,1 @@
+# fantamanajer-docker
