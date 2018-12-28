@@ -13,8 +13,6 @@ services:
       - mysql 
     container_name: php
     restart: always
-  composer:
-    image: composer
   apache:
     build:
       context: './apache/'
@@ -45,20 +43,7 @@ services:
     ports:
       - "3307:3306"
     container_name: mysql
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    environment:
-      - PMA_HOST=mysql
-      - PMA_PORT=3306
-    networks:
-      - backend
-    links:
-      - mysql
-    ports:
-      - "8080:80"
-    volumes:
-      - /sessions
-    container_name: phpmyadmin
+  
 networks:
   frontend:
   backend:

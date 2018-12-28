@@ -1,0 +1,4 @@
+[submodule "api"]
+	path = api
+	url = https://github.com/fiste788/fantamanajer
+	branch = 6.0
