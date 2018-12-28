@@ -8,10 +8,12 @@ services:
     networks:
       - backend
     volumes:
-      - ./api/:/var/www/html/
+      - ../api/:/var/www/html/
     links:
       - mysql 
     container_name: php
+    environment:
+      DATABASE_URL: mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@mysql:${MYSQL_PORT}/${MYSQL_DATABASE}
     restart: always
   apache:
     build:
@@ -27,7 +29,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./api/:/var/www/html/
+      - ../api/:/var/www/html/
     container_name: apache
   mysql:
     image: mariadb:${MYSQL_VERSION:-latest}
@@ -37,13 +39,28 @@ services:
       - backend
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-      MYSQL_DATABASE: fantamanajer
-      MYSQL_USER: fantamanajerUser
-      MYSQL_PASSWORD: banana
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "3307:3306"
+      - 3307:${MYSQL_PORT}
     container_name: mysql
-  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PORT=${MYSQL_PORT}
+      - PMA_USER=root
+      - PMA_PASSWORD=
+    networks:
+      - backend
+    links:
+      - mysql
+    ports:
+      - "8080:80"
+    volumes:
+      - /sessions
+    container_name: phpmyadmin
 networks:
   frontend:
   backend:
